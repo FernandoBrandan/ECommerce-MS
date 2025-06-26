@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../public/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-900 flex">
+    <!-- Navegación lateral (sticky arriba) -->
+    <nav class="w-64 bg-white shadow-lg sticky top-0 h-screen overflow-y-auto">
+        <%- include('partials/main/nav') %>
+    </nav>
+
+    <!-- Contenido principal y respuesta -->
+    <div class="flex-1 flex flex-col">
+        <!-- Contenido principal -->
+        <main class="py-10 px-4 flex-1 overflow-y-auto">
+            <div id="users" class="section">
+                <h2 class="text-3xl font-bold text-center mb-8">API Users</h2>
+                <div>
+                    <%- include('partials/user/register') %>
+                        <%- include('partials/user/login') %>
+                </div>
+            </div>
+
+            <div id="products" class="section hidden">
+                <h2 class="text-3xl font-bold text-center mb-8">API Products</h2>
+                <div>
+                    <%- include('partials/product/create') %>
+                        <%- include('partials/product/get') %>
+                            <%- include('partials/product/getAll') %>
+                                <%- include('partials/product/update') %>
+                                    <%- include('partials/product/delete') %>
+                </div>
+            </div>
+
+            <div id="payment" class="section hidden">
+                <h2 class="text-3xl font-bold text-center mb-8">API Payment</h2>
+                <div></div>
+            </div>
+        </main>
+
+    </div>
+    <!-- Sección de respuesta (sticky arriba) -->
+    <section class="w-96 flex-1 py-10 px-4 bg-gray-100 shadow-lg sticky top-0 h-screen overflow-y-auto">
+        <div class="px-4 py-6">
+            <%- include('partials/main/response') %>
+        </div>
+    </section>
+
+    <script>
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden')
+            })
+            document.getElementById(sectionName).classList.remove('hidden')
+        }
+    </script>
+</body>
+
+</html>

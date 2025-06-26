@@ -1,0 +1,80 @@
+services:
+  user-service:
+    build: ./s1-UserService
+    ports:
+      - 5000:5000
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres_ems
+      POSTGRE_URI: postgres://postgres:postgres@postgres:5432/postgres_ems
+      JWT_SECRET: secret
+    networks:
+      - ecommerce-network
+    depends_on:
+      - postgres
+    deploy:
+      replicas: 1
+  product-service:
+    build: ./s2-productService
+    ports:
+      - 5001:5001
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres_ems
+      POSTGRE_URI: postgres://postgres:postgres@postgres:5432/postgres_ems
+      JWT_SECRET: secret
+    networks:
+      - ecommerce-network
+    depends_on:
+      - postgres
+    deploy:
+      replicas: 1
+
+  gateway:
+    build: ./s0-Gateway
+    ports:
+      - "80:80"
+    networks:
+      - ecommerce-network
+    depends_on:
+      - user-service
+      # - product-service
+      # - shopping-cart-service
+      # - order-service
+      # - payment-service
+  front:
+    build: ./front
+    ports:
+      - "3000:3000"
+    networks:
+      - ecommerce-network
+    depends_on:
+      - user-service
+      # - product-service
+      # - shopping-cart-service
+      # - order-service
+      # - payment-service
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres_ems
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
+
+volumes:
+  pgdata:
+
+networks:
+  ecommerce-network:
+    driver: bridge

@@ -1,0 +1,25 @@
+{
+  "name": "scalable-e-commerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "npm run build && nodemon dist/index.js",
+    "dev:watch": "tsc --watch & nodemon dist/index.js",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-http-proxy": "^2.1.1",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/express-http-proxy": "^1.6.6",
+    "@types/morgan": "^1.9.10",
+    "typescript": "^5.8.3"
+  }
+}
