@@ -1,11 +1,9 @@
-// https://github.com/Thisisaarush/scalable-ecommerce-backend
-
-# Scalable E-Commerce Platform
+# Escalable E-Commerce
 
 Arquitectura de Microservicios con API Gateway.
 Los servicios se comunican entre sí de forma directa y síncrona (por HTTP).
 
-## Tech Stack
+## Stack
 
 - Node.js - Express.js - TypeScript.
 - PostgreSQL.
