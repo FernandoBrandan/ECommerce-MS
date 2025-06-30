@@ -31,6 +31,19 @@ services:
       - postgres
     deploy:
       replicas: 1
+    profiles:
+      - disabled
+
+  payment-service:
+    build: ./s4-PaymentService
+    ports:
+      - 5004:5004
+    networks:
+      - ecommerce-network
+    depends_on:
+      - ngrok
+    deploy:
+      replicas: 1
 
   gateway:
     build: ./s0-Gateway
@@ -43,7 +56,20 @@ services:
       # - product-service
       # - shopping-cart-service
       # - order-service
-      # - payment-service
+      - payment-service
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    command:
+      - "http"
+      - "gateway:80"
+    environment:
+      NGROK_AUTHTOKEN: 2WGHJXYorQq1tNA3u41AqtfXao7_6K59XZhC9VhW2c7BvLHqE
+    ports:
+      - "4040:4040" # Web UI de ngrok
+    networks:
+      - ecommerce-network
+
   front:
     build: ./front
     ports:

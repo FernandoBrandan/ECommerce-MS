@@ -7,8 +7,7 @@
     "build": "tsc",
     "dev": "npm run build && nodemon dist/index.js",
     "dev:watch": "tsc --watch & nodemon dist/index.js",
-    "start": "node dist/index.js",
-    "test": "jest"
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
@@ -29,14 +28,9 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/jest": "^30.0.0",
     "@types/morgan": "^1.9.10",
-    "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "jest": "^30.0.3",
-    "supertest": "^7.1.1",
-    "ts-jest": "^29.4.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }

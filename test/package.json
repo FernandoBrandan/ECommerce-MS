@@ -1,0 +1,26 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:users": "jest --testPathPatterns=users",
+    "test:products": "jest --testPathPatterns=products",
+    "test:cart": "jest --testPathPatterns=cart",
+    "test:orders": "jest --testPathPatterns=orders",
+    "test:notifications": "jest --testPathPatterns=notifications",
+    "test:payment": "jest --testPathPatterns=payment"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/supertest": "^6.0.3",
+    "jest": "^30.0.3",
+    "supertest": "^7.1.1"
+  }
+}

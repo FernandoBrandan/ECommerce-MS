@@ -53,14 +53,15 @@ router.post("/product", async (req: Request, res: Response) => {
             response: newProduct.newProduct,
         })
     } catch (error: Error | any) {
-        res.status(400).json({ message: error.message })
+        const status = error.statusCode || 500
+        res.status(status).json({ message: error.message })
     }
 })
 
 
 /**
  * @swagger 
- * /product:
+ * /products:
  *   get:
  *     summary: Obtener todos los productos
  *     tags: [Product]
@@ -76,7 +77,7 @@ router.post("/product", async (req: Request, res: Response) => {
  *       400:
  *         description: Error en la solicitud
  */
-router.get("/product", async (req: Request, res: Response) => {
+router.get("/products", async (req: Request, res: Response) => {
     try {
         const products = await getAllProductsService()
         res.status(200).json({
@@ -84,7 +85,8 @@ router.get("/product", async (req: Request, res: Response) => {
             response: products.res,
         })
     } catch (error: Error | any) {
-        res.status(400).json({ message: error.message })
+        const status = error.statusCode || 500
+        res.status(status).json({ message: error.message })
     }
 })
 
@@ -120,7 +122,8 @@ router.get("/product/:name", async (req: Request, res: Response) => {
             response: product.res,
         })
     } catch (error: Error | any) {
-        res.status(400).json({ message: error.message })
+        const status = error.statusCode || 500
+        res.status(status).json({ message: error.message })
     }
 })
 
@@ -185,7 +188,8 @@ router.put("/product", async (req: Request, res: Response) => {
             response: product.res,
         })
     } catch (error: Error | any) {
-        res.status(400).json({ message: error.message })
+        const status = error.statusCode || 500
+        res.status(status).json({ message: error.message })
     }
 })
 
@@ -230,7 +234,8 @@ router.delete("/product", async (req: Request, res: Response) => {
             response: product.res,
         })
     } catch (error: Error | any) {
-        res.status(400).json({ message: error.message })
+        const status = error.statusCode || 500
+        res.status(status).json({ message: error.message })
     }
 })
 

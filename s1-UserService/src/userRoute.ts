@@ -38,7 +38,7 @@ router.post("/register", async (req: Request, res: Response) => {
         const newUser = await register(req.body)
         res.status(201).json({
             message: newUser.message,
-            user: newUser.user.name,
+            name: newUser.user.name,
             email: newUser.user.email,
         })
     } catch (error: Error | any) {
@@ -75,13 +75,13 @@ router.post("/register", async (req: Request, res: Response) => {
 router.post("/login", async (req: Request, res: Response) => {
     try {
         const user = await login(req.body)
-        res.status(201).json({
+        res.status(200).json({
             message: user.message,
             email: user.email,
             token: user.token,
         })
     } catch (error: Error | any) {
-        res.status(400).json({ message: error.message })
+        res.status(401).json({ message: error.message })
     }
 })
 

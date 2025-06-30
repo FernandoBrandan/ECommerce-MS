@@ -5,14 +5,14 @@
     "lib": ["ES2020"],                           // Librerías estándar
     "moduleResolution": "node",                  // Para resolver módulos tipo Node.js
     "outDir": "dist",                            // Carpeta de salida
-    "rootDir": "src",                            // Carpeta fuente
+    "rootDir": ".",                              // Carpeta fuente
     "esModuleInterop": true,                     // Permite importar módulos CommonJS como ESModules
     "forceConsistentCasingInFileNames": true,    // Evita errores por diferencia de mayúsculas
     "strict": true,                              // Activa todas las comprobaciones estrictas (recomendado)
     "skipLibCheck": true,                        // Evita chequear tipos de librerías externas (acelera compilación)
     "resolveJsonModule": true,                   // Permite importar archivos .json
-    "baseUrl": "./src",                          // Permite imports relativos desde src
+    "baseUrl": "."                               // Permite imports relativos desde src
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
+  "include": ["tests/**/*.ts"],
+  "exclude": ["node_modules"]
 }

@@ -10,7 +10,8 @@ app.use('/api/users', expressProxy('http://user-service:5000'))
 app.use('/api/products', expressProxy('http://product-service:5001'))
 app.use('/api/cart', expressProxy('http://shopping-cart:5002'))
 app.use('/api/orders', expressProxy('http://order-service:5003'))
-app.use('/api/notification', expressProxy('http://notification-service:5004'))
+app.use('/api/payments', expressProxy('http://payment-service:5004'))
+app.use('/api/notification', expressProxy('http://notification-service:5005'))
 
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err)

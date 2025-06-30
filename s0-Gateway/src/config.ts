@@ -15,9 +15,10 @@ const middleware = (app: express.Application) => {
         referrerPolicy: false,
     }))
 
+    app.set('trust proxy', 1) // Confía en el X-Forwarded-For que llega del proxy/gateway
     const limiter = rateLimit({
         windowMs: 5 * 60 * 1000,
-        limit: 50,
+        limit: 500,
         max: 100,
         standardHeaders: true,
         legacyHeaders: false,
