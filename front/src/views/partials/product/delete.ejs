@@ -1,10 +1,89 @@
-<!-- Delete Product -->
-<section class="mb-10 bg-white rounded-xl shadow p-6">
-    <h3 class="text-xl font-semibold mb-4">Delete Product</h3>
-    <p class="text-sm mb-2 text-gray-500">DELETE http://localhost:80/api/product</p>
-    <form id="deleteProductForm" class="space-y-4">
-        <input type="text" name="name" placeholder="Product Name" class="w-full px-4 py-2 border rounded-md" required />
-        <button type="submit" class="w-full bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">Delete
-            Product</button>
-    </form>
-</section>
+<!-- views/partials/product/delete.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Producto</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <%- include('../main/nav') %>
+
+        <main class="container mx-auto px-4 py-8">
+            <div class="max-w-2xl mx-auto">
+                <div class="mb-6">
+                    <a href="/products" class="text-blue-600 hover:text-blue-800 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                            </path>
+                        </svg>
+                        Volver a productos
+                    </a>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="text-center">
+                        <div class="text-red-600 mb-4">
+                            <svg class="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd" />
+                                <path fill-rule="evenodd"
+                                    d="M10 5a1 1 0 011 1v3l1.586-1.586a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414L8 9V6a1 1 0 011-1z"
+                                    clip-rule="evenodd" />
+                                <path
+                                    d="M3 5a2 2 0 012-2h1a1 1 0 000 2H5v6.586l1.293-1.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 011.414-1.414L3 11.586V5zM15 5a2 2 0 00-2-2h-1a1 1 0 000 2h1v6.586l-1.293-1.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L15 11.586V5z" />
+                            </svg>
+                        </div>
+
+                        <h1 class="text-3xl font-bold text-gray-800 mb-4">Confirmar Eliminación</h1>
+
+                        <% if (typeof product !=='undefined' && product) { %>
+                            <div class="bg-gray-50 rounded-lg p-6 mb-6">
+                                <h2 class="text-xl font-semibold text-gray-800 mb-2">
+                                    <%= product.name %>
+                                </h2>
+                                <p class="text-gray-600 mb-2">
+                                    <%= product.description || 'Sin descripción' %>
+                                </p>
+                                <div class="flex justify-center space-x-4 text-sm text-gray-500">
+                                    <span>Precio: $<%= product.price %></span>
+                                    <span>Stock: <%= product.stock %></span>
+                                </div>
+                            </div>
+
+                            <p class="text-gray-600 mb-8">
+                                ¿Está seguro de que desea eliminar este producto?
+                                <strong class="text-red-600">Esta acción no se puede deshacer.</strong>
+                            </p>
+
+                            <div class="flex justify-center space-x-4">
+                                <a href="/products/<%= product.id %>"
+                                    class="bg-gray-500 text-white px-6 py-3 rounded-md hover:bg-gray-600 transition">
+                                    Cancelar
+                                </a>
+                                <form action="/products/<%= product.id %>" method="POST" class="inline">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit"
+                                        class="bg-red-600 text-white px-6 py-3 rounded-md hover:bg-red-700 transition">
+                                        Eliminar Producto
+                                    </button>
+                                </form>
+                            </div>
+                            <% } else { %>
+                                <p class="text-gray-600 mb-6">Producto no encontrado</p>
+                                <a href="/products"
+                                    class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                                    Ver todos los productos
+                                </a>
+                                <% } %>
+                    </div>
+                </div>
+            </div>
+
+            <%- include('../main/response') %>
+        </main>
+</body>
+
+</html>

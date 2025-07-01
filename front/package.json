@@ -6,7 +6,10 @@
     "build": "tsc",
     "dev": "npm run build && nodemon dist/index.js",
     "dev:watch": "tsc --watch & nodemon dist/index.js",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "del": "rm -rf dist",
+    "copy-assets": "npm run del && mkdir -p dist && cp -r src/public dist/public && cp -r src/views dist/views",
+    "local": "npm run copy-assets && npm run dev:watch"
   },
   "dependencies": {
     "axios": "^1.10.0",

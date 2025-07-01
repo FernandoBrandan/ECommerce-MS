@@ -1,0 +1,29 @@
+<div class="bg-gray-100 shadow-lg p-4 rounded-md">
+    <strong>Response:</strong>
+    <% if (typeof Response !=='undefined' && Response) { %>
+        <div id="json-box"
+            class="mt-4 bg-blue-100 text-blue-800 px-4 py-2 rounded-md text-sm overflow-x-auto overflow-y-auto max-w-full">
+            <pre class="whitespace-pre-wrap break-words text-xs leading-relaxed">
+<code><%= typeof Response === 'object' ? JSON.stringify(Response) : Response %></code>
+      </pre>
+        </div>
+        <button id="format-json" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+            Format JSON
+        </button>
+        <% } %>
+</div>
+
+<script>
+    document.querySelector('#format-json')?.addEventListener('click', () => {
+        const jsonBox = document.getElementById('json-box')
+        const code = jsonBox.querySelector('code')
+
+        try {
+            const content = code.innerText.trim()
+            const parsed = JSON.parse(content)
+            code.innerText = JSON.stringify(parsed, null, 2)
+        } catch (e) {
+            code.innerText = '❌ Invalid JSON format.'
+        }
+    })
+</script>

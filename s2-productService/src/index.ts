@@ -20,9 +20,5 @@ import orderRoutes from "./productRoute"
 app.use("/v1", orderRoutes)
 
 const PORT = process.env.PORT || 5001
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
-})
-
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
 export default app  

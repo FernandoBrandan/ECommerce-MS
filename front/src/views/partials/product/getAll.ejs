@@ -1,9 +1,138 @@
-<!-- Get All Products -->
-<section class="mb-10 bg-white rounded-xl shadow p-6">
-    <h3 class="text-xl font-semibold mb-4">Get All Products</h3>
-    <p class="text-sm mb-2 text-gray-500">GET http://localhost:80/api/product</p>
-    <form action="/product" method="get">
-        <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Get
-            Products</button>
-    </form>
-</section>
+<!-- views/partials/product/getAll.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos los Productos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <%- include('../main/nav') %>
+
+        <main class="container mx-auto px-4 py-8">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Productos</h1>
+                <a href="/products/create"
+                    class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                    Nuevo Producto
+                </a>
+            </div>
+
+            <!-- Filtros -->
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <div class="grid md:grid-cols-4 gap-4">
+                    <input type="text" placeholder="Buscar por nombre..."
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Todas las categorías</option>
+                        <option value="electronics">Electrónicos</option>
+                        <option value="clothing">Ropa</option>
+                        <option value="books">Libros</option>
+                        <option value="home">Hogar</option>
+                        <option value="sports">Deportes</option>
+                    </select>
+                    <select
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Ordenar por</option>
+                        <option value="name">Nombre</option>
+                        <option value="price">Precio</option>
+                        <option value="stock">Stock</option>
+                    </select>
+                    <button class="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-900 transition">
+                        Filtrar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lista de productos -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <% if (typeof products !=='undefined' && products.length> 0) { %>
+                    <% products.forEach(product=> { %>
+                        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
+                            <div class="p-6 flex flex-col flex-grow">
+                                <!-- Título y categoría -->
+                                <div class="flex justify-between items-start mb-4">
+                                    <h3 class="text-xl font-semibold text-gray-800">
+                                        <%= product.name %>
+                                    </h3>
+                                    <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                                        <%= product.category || 'Sin categoría' %>
+                                    </span>
+                                </div>
+
+                                <!-- Descripción -->
+                                <p class="text-gray-400 mb-4 line-clamp-3">
+                                    <%= product.description || 'Sin descripción' %>
+                                </p>
+
+                                <!-- Precio y stock -->
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-2xl font-bold text-green-600">$<%= product.price %></span>
+                                    <span class="text-sm text-gray-500">Stock: <%= product.stock %></span>
+                                </div>
+
+                                <!-- Botones (se van abajo gracias a mt-auto) -->
+                                <div class="flex space-x-2 mt-auto">
+                                    <a href="//<%= product.id %>"
+                                        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded text-center hover:bg-blue-700 transition">
+                                        Carrito
+                                    </a>
+                                    <a href="/products/get/<%= product.id %>"
+                                        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded text-center hover:bg-blue-700 transition">
+                                        Ver
+                                    </a>
+                                    <a href="/products/edit/<%= product.id %>"
+                                        class="flex-1 bg-blue-500 text-white py-2 px-4 rounded text-center hover:bg-yellow-600 transition">
+                                        Editar
+                                    </a>
+                                    <button onclick="deleteProduct('<%= product.id %>')"
+                                        class="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-red-700 transition">
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <div class="col-span-full text-center py-12">
+                                    <div class="text-gray-400 mb-4">
+                                        <svg class="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                                            <path
+                                                d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-xl font-medium text-gray-500 mb-2">No hay productos
+                                        disponibles</h3>
+                                    <p class="text-gray-400 mb-4">Comienza creando tu primer producto
+                                    </p>
+                                    <a href="/products/create"
+                                        class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                                        Crear Producto
+                                    </a>
+                                </div>
+                                <% } %>
+            </div>
+
+            <%- include('../main/response') %>
+        </main>
+
+        <script>
+            function deleteProduct(productId) {
+                if (confirm('¿Está seguro de que desea eliminar este producto?')) {
+                    fetch(`/products/${productId}`, {
+                        method: 'DELETE'
+                    }).then(response => {
+                        console.log(response.json)
+
+                        location.reload()
+                    })
+                }
+            }
+        </script>
+</body>
+
+</html>

@@ -25,12 +25,14 @@ export const createPreference = async (orderData: any) => {
             failure: urls.failureUrl,
             pending: urls.pendingUrl,
         },
-        notification_url: urls.notificationUrl,
+        notification_url: urls.notificationUrl || '',
         auto_return: 'approved'
     }
     const preference_created = await preference.create({ body })
 
-    createPreferenceDB(preference_created.id, preference_created.external_reference)
+    if (preference_created.id && preference_created.external_reference) {
+        await createPreferenceDB(preference_created.id, preference_created.external_reference)
+    }
 
     return preference_created
 }

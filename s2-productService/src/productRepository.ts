@@ -1,6 +1,6 @@
 import { IProduct } from "./productInterface"
 import { Product } from "./productModel"
-import { CustomError } from "productUtils"
+import { CustomError } from "./productUtils"
 
 export const createProductDB = async (product: IProduct): Promise<IProduct> => {
     const duplicate = await Product.findOne({ where: { name: product.name } })
@@ -17,21 +17,20 @@ export const getAllProductsDB = async (): Promise<IProduct[]> => {
     return products.map(product => product.toJSON())
 }
 
-export const getProductDB = async (name: string) => {
-    const response = await Product.findOne({ where: { name: name } })
+export const getProductDB = async (id: number) => {
+    const response = await Product.findOne({ where: { id: id } })
     if (!response) throw new CustomError("Product not found", 404)
     return response.toJSON()
-
 }
 
 export const updateProductDB = async (product: IProduct) => {
-    const [affectedCount] = await Product.update(product, { where: { name: product.name } })
+    const [affectedCount] = await Product.update(product, { where: { id: product.id } })
     if (affectedCount === 0) throw new CustomError("Product not found", 401)
     return affectedCount
 }
 
-export const deleteProductDB = async (name: string) => {
-    const response = await Product.destroy({ where: { name: name } })
+export const deleteProductDB = async (id: number) => {
+    const response = await Product.destroy({ where: { id: id } })
     if (!response) throw new CustomError("Product not found", 401)
     return response
 }

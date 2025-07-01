@@ -1,63 +1,78 @@
+<!-- views/index.ejs -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../public/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Aplicación</title>
     <script src="https://cdn.tailwindcss.com"></script>
-</head>
-
-<body class="bg-gray-100 text-gray-900 flex">
-    <!-- Navegación lateral (sticky arriba) -->
-    <nav class="w-64 bg-white shadow-lg sticky top-0 h-screen overflow-y-auto">
-        <%- include('partials/main/nav') %>
-    </nav>
-
-    <!-- Contenido principal y respuesta -->
-    <div class="flex-1 flex flex-col">
-        <!-- Contenido principal -->
-        <main class="py-10 px-4 flex-1 overflow-y-auto">
-            <div id="users" class="section">
-                <h2 class="text-3xl font-bold text-center mb-8">API Users</h2>
-                <div>
-                    <%- include('partials/user/register') %>
-                        <%- include('partials/user/login') %>
-                </div>
-            </div>
-
-            <div id="products" class="section hidden">
-                <h2 class="text-3xl font-bold text-center mb-8">API Products</h2>
-                <div>
-                    <%- include('partials/product/create') %>
-                        <%- include('partials/product/get') %>
-                            <%- include('partials/product/getAll') %>
-                                <%- include('partials/product/update') %>
-                                    <%- include('partials/product/delete') %>
-                </div>
-            </div>
-
-            <div id="payment" class="section hidden">
-                <h2 class="text-3xl font-bold text-center mb-8">API Payment</h2>
-                <div></div>
-            </div>
-        </main>
-
-    </div>
-    <!-- Sección de respuesta (sticky arriba) -->
-    <section class="w-96 flex-1 py-10 px-4 bg-gray-100 shadow-lg sticky top-0 h-screen overflow-y-auto">
-        <div class="px-4 py-6">
-            <%- include('partials/main/response') %>
-        </div>
-    </section>
-
     <script>
-        function showSection(sectionName) {
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.add('hidden')
-            })
-            document.getElementById(sectionName).classList.remove('hidden')
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981'
+                    }
+                }
+            }
         }
     </script>
+</head>
+
+<body class="bg-slate-800 min-h-screen">
+    <%- include('partials/main/nav') %>
+
+        <main class="container mx-auto px-4 py-8">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-200 mb-4">Bienvenido a Mi Aplicación</h1>
+                <p class="text-xl text-gray-100 mb-8">Gestiona productos y usuarios de manera eficiente</p>
+
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Sección Productos -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="text-blue-600 mb-4">
+                            <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Productos</h2>
+                        <p class="text-gray-600 mb-6">Administra tu inventario de productos</p>
+                        <div class="space-y-2">
+                            <a href="/products"
+                                class="block w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition text-center">Ver
+                                Productos</a>
+                            <a href="/products/create"
+                                class="block w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition text-center">Crear
+                                Producto</a>
+                        </div>
+                    </div>
+
+                    <!-- Sección Usuarios -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="text-green-600 mb-4">
+                            <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Usuarios</h2>
+                        <p class="text-gray-600 mb-6">Gestiona cuentas de usuario</p>
+                        <div class="space-y-2">
+                            <a href="/user/login"
+                                class="block w-full bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-900 transition text-center">Iniciar
+                                Sesión</a>
+                            <a href="/user/register"
+                                class="block w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition text-center">Registrarse</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%- include('partials/main/response') %>
+        </main>
 </body>
 
 </html>

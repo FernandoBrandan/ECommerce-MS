@@ -114,9 +114,9 @@ router.get("/products", async (req: Request, res: Response) => {
  *       404:
  *         description: Producto no encontrado
  */
-router.get("/product/:name", async (req: Request, res: Response) => {
+router.get("/product/:id", async (req: Request, res: Response) => {
     try {
-        const product = await getProductService(req.params.name)
+        const product = await getProductService(parseInt(req.params.id))
         res.status(200).json({
             message: product.message,
             response: product.res,
@@ -226,9 +226,9 @@ router.put("/product", async (req: Request, res: Response) => {
  *       400:
  *         description: Producto no encontrado o error en la solicitud
  */
-router.delete("/product", async (req: Request, res: Response) => {
+router.delete("/product/:id", async (req: Request, res: Response) => {
     try {
-        const product = await deleteProductService(req.body.name)
+        const product = await deleteProductService(parseInt(req.params.id))
         res.status(200).json({
             message: product.message,
             response: product.res,
