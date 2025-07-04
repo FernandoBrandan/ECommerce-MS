@@ -1,0 +1,320 @@
+<!-- views/cart.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-800 min-h-screen">
+    <%- include('../main/nav') %>
+
+        <main class="container mx-auto px-4 py-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-6">
+                    <a href="/products" class="text-blue-400 hover:text-blue-300 flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7">
+                            </path>
+                        </svg>
+                        Continuar comprando
+                    </a>
+                </div>
+
+                <div class="flex items-center justify-between mb-8">
+                    <!-- Agrupación izquierda: título + tooltip -->
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-3xl font-bold text-gray-200">Mi Carrito</h1>
+                        <div class="relative group">
+                            <svg class="w-4 h-4 text-gray-400 cursor-help" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                    clip-rule="evenodd" />
+                            </svg>
+
+                            <div
+                                class="absolute top-6 left-1/2 -translate-x-1/2 w-80 p-4 bg-gray-900 text-gray-200 text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                                <p>Envío gratis en compras superiores a $500. Entrega en 24-48hs en CABA.</p>
+                                <ul class="mt-4 space-y-1 list-disc pl-5">
+                                    <br>
+                                    <h5>⚡ Funcionalidades:</h5>
+                                    <li>Mostrar productos con cantidad y precios.</li>
+                                    <li>Añadir/reducir cantidades de productos.</li>
+                                    <li>Eliminar productos individuales del carrito.</li>
+                                    <li>Vaciar carrito completo con confirmación.</li>
+                                    <li>Resumen detallado con subtotal, envío, impuestos y total.</li>
+                                    <li>Sistema de cupones de descuento y promociones.</li>
+                                    <li>Estado vacío con mensaje y sugerencias.</li>
+                                </ul>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <!-- Derecha: ícono carrito + contador -->
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                        </svg>
+                        <span id="cart-count" class="text-gray-200 font-medium">
+                            <% if (quantityItems===1) { %>
+                                <%=quantityItems %> producto
+                                    <% } else { %>
+                                        <%=quantityItems %> productos
+                                            <% } %>
+                        </span>
+                    </div>
+                </div>
+
+
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- Lista de productos en el carrito -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-slate-700 rounded-lg shadow-lg overflow-hidden">
+                            <div class="p-6">
+
+                                <!-- Carrito vacío -->
+                                <% if (!items || items.length===0) { %>
+                                    <div id="empty-cart" class="text-center py-12">
+                                        <div class="text-gray-400 mb-4">
+                                            <svg class="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                                            </svg>
+                                        </div>
+                                        <h3 class="text-xl font-medium text-gray-300 mb-2">
+                                            Tu
+                                            carrito está
+                                            vacío
+                                        </h3>
+                                        <p class="text-gray-400 mb-6">Agrega algunos
+                                            productos
+                                            para comenzar
+                                            tu
+                                            compra
+                                        </p>
+                                        <a href="/products"
+                                            class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition">
+                                            Ver productos
+                                        </a>
+                                    </div>
+                                    <% } else { %>
+                                        <h2 class="text-xl font-semibold text-gray-200 mb-6">Productos en tu carrito
+                                        </h2>
+                                        <!-- Lista de productos -->
+                                        <div id="cart-items" class="space-y-4">
+                                            <% items.forEach(item=> { %>
+                                                <div class="flex items-center space-x-4 p-4 bg-slate-600 rounded-lg">
+                                                    <!-- Imagen del producto -->
+                                                    <% const img=item.image || '' ; %>
+                                                        <% if (typeof img==='string' && img.startsWith('http')) { %>
+                                                            <div
+                                                                class="w-16 h-16 mr-2 bg-slate-500 rounded-md overflow-hidden">
+                                                                <img src="<%= img %>" alt="Producto"
+                                                                    class="w-full h-full object-cover" />
+                                                            </div>
+                                                            <% } else { %>
+                                                                <div
+                                                                    class="w-16 h-16 mr-2 bg-slate-500 rounded-md flex items-center justify-center">
+                                                                    <svg class="w-8 h-8 text-gray-400"
+                                                                        fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fill-rule="evenodd"
+                                                                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                                                            clip-rule="evenodd" />
+                                                                    </svg>
+                                                                </div>
+                                                                <% } %>
+
+                                                                    <div class="flex-1">
+                                                                        <h4 class="text-gray-200 font-medium">
+                                                                            <%= item.name || 'Producto' %>
+                                                                        </h4>
+                                                                        <h3 class="text-gray-200 font-medium">
+                                                                            $<%= item.price.toLocaleString('es-AR', {
+                                                                                minimumFractionDigits: 2 }) || 0 %>
+                                                                        </h3>
+                                                                        <p class="text-gray-400 text-sm">
+                                                                            <%= 'categoria' %>
+                                                                        </p>
+                                                                    </div>
+                                                                    <div class="flex items-center space-x-3">
+                                                                        <a href="/cart/update-quantity/<%= item.productId %>/decrement"
+                                                                            class="w-8 h-8 pb-2 bg-slate-500 text-gray-200 rounded-full hover:bg-slate-400 transition flex items-center justify-center text-3xl">
+                                                                            -
+                                                                        </a>
+                                                                        <span
+                                                                            class="text-gray-200 font-medium w-8 text-center">
+                                                                            <%= item.quantity %>
+                                                                        </span>
+                                                                        <a href="/cart/update-quantity/<%= item.productId %>/increment"
+                                                                            class="w-8 h-8 bg-slate-500 text-gray-200 rounded-full hover:bg-slate-400 transition flex items-center justify-center text-3xl">
+                                                                            +
+                                                                        </a>
+                                                                    </div>
+                                                                    <a href="/cart/removeFromCart/<%= item.productId %>"
+                                                                        class="text-red-400 hover:text-red-300 transition ml-4">
+                                                                        <svg class="w-5 h-5" fill="currentColor"
+                                                                            viewBox="0 0 20 20">
+                                                                            <path fill-rule="evenodd"
+                                                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                                                clip-rule="evenodd" />
+                                                                        </svg>
+                                                                    </a>
+                                                </div>
+                                                <% }) %>
+                                        </div>
+
+
+                                        <!-- Acciones del carrito -->
+                                        <div id="cart-actions" class="  border-t border-slate-600 pt-6 mt-6">
+                                            <div class="flex justify-between">
+                                                <a href="/cart/clear"
+                                                    class="text-red-400 hover:text-red-300 transition">
+                                                    <svg class="w-5 h-5 inline mr-2" fill="currentColor"
+                                                        viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd"
+                                                            d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                                                            clip-rule="evenodd" />
+                                                    </svg>
+                                                    Vaciar carrito
+                                                </a>
+                                                <a href="/products"
+                                                    class="text-blue-400 hover:text-blue-300 transition">
+                                                    Continuar comprando
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resumen del pedido -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-slate-700 rounded-lg shadow-lg p-6 sticky top-8">
+                            <h3 class="text-xl font-semibold text-gray-200 mb-6">Resumen del pedido</h3>
+
+                            <div class="space-y-4 mb-6">
+                                <div class="flex justify-between text-gray-300">
+                                    <span>Subtotal:</span>
+                                    <span id="subtotal">$<%= totalPrice.toLocaleString('es-AR', { minimumFractionDigits:
+                                            2 }) %></span>
+                                </div>
+                                <div class="flex justify-between text-gray-300 relative">
+                                    <!-- info -->
+                                    <span class="flex items-center">
+                                        Envío:
+                                        <div class="relative ml-1 group">
+                                            <svg class="w-4 h-4 text-gray-400 cursor-help" fill="currentColor"
+                                                viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                            <div
+                                                class="absolute bottom-6 left-1/2 transform -translate-x-1/2 w-48 p-2 bg-gray-900 text-gray-200 text-xs rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10">
+                                                Envío gratis en compras superiores a $500. Entrega en 24-48hs en CABA.
+                                            </div>
+                                        </div>
+                                    </span>
+
+                                    <div class="flex items-center space-x-2">
+                                        <span id="shipping">$<%= shipment.toLocaleString('es-AR', {
+                                                minimumFractionDigits: 2 }) %></span>
+
+                                        <!-- Botón de 3 puntos -->
+                                        <div class="relative group">
+                                            <button class="text-gray-400 hover:text-gray-200 focus:outline-none">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path
+                                                        d="M6 10a2 2 0 114 0 2 2 0 01-4 0zm5 0a2 2 0 114 0 2 2 0 01-4 0zm5 0a2 2 0 114 0 2 2 0 01-4 0z" />
+                                                </svg>
+                                            </button>
+
+                                            <!-- Menú desplegable -->
+                                            <div
+                                                class="absolute right-0 mt-2 w-40 bg-gray-800 text-sm text-white rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-150 z-10 pointer-events-none group-hover:pointer-events-auto">
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Cambiar
+                                                    dirección</a>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Seleccionar envío
+                                                    exprés</a>
+                                                <a href="#" class="block px-4 py-2 hover:bg-gray-700">Eliminar envío</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-between text-gray-300">
+                                    <span>Impuestos:</span>
+                                    <span id="taxes">$<%= taxes.toLocaleString('es-AR', { minimumFractionDigits: 2 }) %>
+                                    </span>
+                                </div>
+                                <div class="border-t border-slate-600 pt-4">
+                                    <div class="flex justify-between text-xl font-bold text-gray-200">
+                                        <span>Total:</span>
+                                        <span id="total">$<%= totalFinal.toLocaleString('es-AR', {
+                                                minimumFractionDigits: 2 }) %></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-3">
+                                <button id="checkout-btn"
+                                    class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition font-medium <%= quantityItems === 0 ? 'disabled:bg-gray-600 disabled:cursor-not-allowed' : '' %>"
+                                    <%=quantityItems===0 ? 'disabled' : '' %>>
+                                    Proceder al pago
+                                </button>
+                            </div>
+
+                            <!-- Cupón de descuento -->
+                            <div class="mt-6 pt-6 border-t border-slate-600">
+                                <h4 class="text-gray-200 font-medium mb-3">Código de descuento</h4>
+                                <div class="flex space-x-2">
+                                    <input type="text" id="coupon-input" placeholder="Ingresa tu código"
+                                        class="flex-1 bg-slate-600 text-gray-200 rounded-md border border-slate-500 focus:border-blue-400 focus:outline-none">
+                                    <button onclick="applyCoupon()"
+                                        class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition">
+                                        Aplicar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <%- include('../main/response') %>
+        </main>
+
+        <script>
+            function applyCoupon() {
+                const couponInput = document.getElementById('coupon-input')
+                const couponCode = couponInput.value.trim()
+                if (couponCode === 'DESCUENTO10') {
+                    alert('¡Cupón aplicado! 10% de descuento')
+                    couponInput.value = ''
+                } else {
+                    alert('Código de cupón inválido')
+                }
+            } 
+        </script>
+</body>
+
+</html>

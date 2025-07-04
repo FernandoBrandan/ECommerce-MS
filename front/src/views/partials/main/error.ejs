@@ -1,16 +1,48 @@
-<% if (typeof error !=='undefined' && error) { %>
-    <div class="max-w-2xl mx-auto mt-8">
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <span class="block sm:inline">
-                <%= error %>
-            </span>
-            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                <svg class="fill-current h-6 w-6 text-red-500" role="button" viewBox="0 0 20 20">
-                    <title>Cerrar</title>
-                    <path
-                        d="M14.348 14.849a1 1 0 01-1.497 0L10 11.819l-2.851 3.030a1 1 0 11-1.497-1.414l2.851-3.030-2.851-3.030a1 1 0 111.497-1.414L10 8.181l2.851-3.030a1 1 0 111.497 1.414L11.497 9.395l2.851 3.030a1 1 0 010 1.414z" />
-                </svg>
-            </span>
-        </div>
-    </div>
-    <% } %>
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Aplicación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-800 min-h-screen">
+    <%- include('../main/nav') %>
+
+        <% if (typeof error !=='undefined' && error) { %>
+            <div class="max-w-2xl mx-auto mt-8">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline">
+                        <%= error %>
+                    </span>
+                    <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                        <svg class="fill-current h-6 w-6 text-red-500" role="button" viewBox="0 0 20 20">
+                            <title>Cerrar</title>
+                            <path
+                                d="M14.348 14.849a1 1 0 01-1.497 0L10 11.819l-2.851 3.030a1 1 0 11-1.497-1.414l2.851-3.030-2.851-3.030a1 1 0 111.497-1.414L10 8.181l2.851-3.030a1 1 0 111.497 1.414L11.497 9.395l2.851 3.030a1 1 0 010 1.414z" />
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            <% } %>
+
+                <%- include('../main/response') %>
+                    </main>
+</body>
+
+</html>

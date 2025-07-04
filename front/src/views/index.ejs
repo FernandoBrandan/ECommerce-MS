@@ -29,7 +29,7 @@
                 <h1 class="text-4xl font-bold text-gray-200 mb-4">Bienvenido a Mi Aplicación</h1>
                 <p class="text-xl text-gray-100 mb-8">Gestiona productos y usuarios de manera eficiente</p>
 
-                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="grid md:grid-cols-4 gap-8 max-w-6xl mx-auto">
                     <!-- Sección Productos -->
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <div class="text-blue-600 mb-4">
@@ -67,11 +67,27 @@
                             <a href="/user/register"
                                 class="block w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 transition text-center">Registrarse</a>
                         </div>
+
+                    </div>
+                    <!-- Sección Carrito -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="text-green-600 mb-4">
+                            <svg class="w-12 h-12 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.3 2.6a1 1 0 00.9 1.4h12.4M10 21a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Carrito</h2>
+                        <p class="text-gray-600 mb-6">Gestiona carrito de usuario</p>
+                        <div class="space-y-2">
+                            <a href="/cart"
+                                class="block w-full bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-900 transition text-center">
+                                Ver Carrito</a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <%- include('partials/main/response') %>
+                <%- include('partials/main/response') %>
         </main>
 </body>
 

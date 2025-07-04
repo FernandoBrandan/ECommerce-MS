@@ -15,24 +15,12 @@ app.get('/', (_req, res) => {
 
 import auth from './auth/authRoute.js'
 import products from './products/productsRoute.js'
+import cart from './cart/cartRoute.js'
 app.use('/', auth)
 app.use('/products', products)
+app.use('/cart', cart)
 
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`)
 })
-
-/**
- * 
- *   {
-      id: 1,
-      name: 'Fernando',
-      description: 'FernandoFernandoFernandoFernando',
-      price: 213,
-      stock: 123,
-      createdAt: '2025-06-20T20:12:19.832Z',
-      updatedAt: '2025-06-20T20:12:19.832Z'
-    },
-
- */

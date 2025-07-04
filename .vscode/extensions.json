@@ -1,0 +1,17 @@
+{
+    "recommendations": [
+        "github.remotehub",
+        "mhutchie.git-graph",
+        "hediet.vscode-drawio",
+        "leetcode.vscode-leetcode",
+        "ms-vscode.remote-repositories",
+        "amazonwebservices.aws-toolkit-vscode",
+        "jeff-hykin.better-cpp-syntax",
+        "llvm-vs-code-extensions.vscode-clangd",
+        "twxs.cmake",
+        "ms-vscode.cmake-tools",
+        "ritwickdey.liveserver",
+        "anweber.vscode-httpyac",
+        "adpyke.codesnap"
+    ]
+}
