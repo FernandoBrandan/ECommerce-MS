@@ -1,0 +1,108 @@
+<!-- views/order-flow.ejs -->
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flujo de Órdenes - TechStore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+
+<body class="bg-slate-800">
+    <nav class="bg-slate-900 p-4 mb-4">
+        <div class="container mx-auto">
+            <h1 class="text-white text-xl font-bold">Flujo de Órdenes</h1>
+        </div>
+    </nav>
+
+    <main class="w-[90vw] max-w-7xl mx-auto px-4 py-4 space-y-4">
+
+        <div class="text-gray-400 text-sm mb-6">
+            Visualización del flujo de estados de una orden, con datos enviados y recibidos en cada paso.
+        </div>
+
+
+        <div class="flex flex-wrap gap-4 justify-start">
+
+            <!-- Evento: Orden Creada -->
+            <div class="bg-slate-700 border-l-4 border-gray-400 p-4 rounded-lg shadow w-fit min-w-[260px] max-w-sm">
+                <div class="flex items-center space-x-2 mb-2">
+                    <i data-lucide="file-clock" class="w-4 h-4 text-gray-300"></i>
+                    <h2 class="text-gray-100 font-semibold text-sm">Orden Creada</h2>
+                </div>
+                <p class="text-gray-400 text-xs mb-1">Acción: Cliente realiza checkout en frontend</p>
+                <p class="text-gray-300 text-sm">➡️ Se crea orden en base de datos con status <code>created</code></p>
+                <p class="text-xs text-slate-400 mt-2">📤 Datos enviados: carrito, userId, total</p>
+            </div>
+
+            <!-- Evento: Se genera preferencia MP -->
+            <div class="bg-slate-700 border-l-4 border-orange-400 p-4 rounded-lg shadow w-fit min-w-[260px] max-w-sm">
+                <div class="flex items-center space-x-2 mb-2">
+                    <i data-lucide="credit-card" class="w-4 h-4 text-orange-400"></i>
+                    <h2 class="text-orange-300 font-semibold text-sm">Pendiente de Pago</h2>
+                </div>
+                <p class="text-gray-400 text-xs mb-1">Acción: Se genera preferencia de pago en MercadoPago</p>
+                <p class="text-gray-300 text-sm">➡️ Se guarda el <code>init_point</code> en la orden</p>
+                <p class="text-xs text-slate-400 mt-2">📤 Enviado a MP: monto total, descripción, callback_url</p>
+                <p class="text-xs text-slate-400">📥 Recibido: init_point, id_preference</p>
+            </div>
+
+            <!-- Evento: Usuario paga -->
+            <div class="bg-slate-700 border-l-4 border-yellow-400 p-4 rounded-lg shadow w-fit min-w-[260px] max-w-sm">
+                <div class="flex items-center space-x-2 mb-2">
+                    <i data-lucide="clock" class="w-4 h-4 text-yellow-400"></i>
+                    <h2 class="text-yellow-300 font-semibold text-sm">Pago Procesándose</h2>
+                </div>
+                <p class="text-gray-400 text-xs mb-1">Acción: Usuario completa pago en MP</p>
+                <p class="text-gray-300 text-sm">➡️ Webhook recibido de MP: status = "in_process"</p>
+                <p class="text-xs text-slate-400 mt-2">📥 Recibido: payment_id, status, payer_email</p>
+            </div>
+
+            <!-- Evento: Pago confirmado -->
+            <div class="bg-slate-700 border-l-4 border-blue-400 p-4 rounded-lg shadow w-fit min-w-[260px] max-w-sm">
+                <div class="flex items-center space-x-2 mb-2">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-blue-400"></i>
+                    <h2 class="text-blue-300 font-semibold text-sm">Pagado - Preparando Envío</h2>
+                </div>
+                <p class="text-gray-400 text-xs mb-1">Acción: MercadoPago confirma el pago</p>
+                <p class="text-gray-300 text-sm">➡️ Se actualiza orden con status <code>paid</code> y se inicia
+                    preparación
+                </p>
+                <p class="text-xs text-slate-400 mt-2">📥 Recibido: payment_id, status="approved"</p>
+            </div>
+
+            <!-- Evento: Enviado -->
+            <div class="bg-slate-700 border-l-4 border-purple-400 p-4 rounded-lg shadow w-fit min-w-[260px] max-w-sm">
+                <div class="flex items-center space-x-2 mb-2">
+                    <i data-lucide="truck" class="w-4 h-4 text-purple-400"></i>
+                    <h2 class="text-purple-300 font-semibold text-sm">Enviado</h2>
+                </div>
+                <p class="text-gray-400 text-xs mb-1">Acción: Se genera código de seguimiento</p>
+                <p class="text-gray-300 text-sm">➡️ Se actualiza orden con status <code>shipped</code></p>
+                <p class="text-xs text-slate-400 mt-2">📤 Enviado: orderId, dirección de envío, carrier</p>
+                <p class="text-xs text-slate-400">📥 Recibido: tracking_id</p>
+            </div>
+
+            <!-- Evento: Entregado -->
+            <div class="bg-slate-700 border-l-4 border-green-400 p-4 rounded-lg shadow w-fit min-w-[260px] max-w-sm">
+                <div class="flex items-center space-x-2 mb-2">
+                    <i data-lucide="check" class="w-4 h-4 text-green-400"></i>
+                    <h2 class="text-green-300 font-semibold text-sm">Entregado</h2>
+                </div>
+                <p class="text-gray-400 text-xs mb-1">Acción: Confirmación de entrega por parte del courier</p>
+                <p class="text-gray-300 text-sm">➡️ Se marca la orden como <code>delivered</code></p>
+                <p class="text-xs text-slate-400 mt-2">📥 Recibido: delivery timestamp, persona que lo recibió</p>
+            </div>
+        </div>
+
+        <!-- Otros eventos opcionales: cancelación, fallido, reembolso, etc. -->
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

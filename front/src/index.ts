@@ -13,12 +13,14 @@ app.get('/', (_req, res) => {
     res.render('index', { Response: "" })
 })
 
-import auth from './auth/authRoute.js'
-import products from './products/productsRoute.js'
-import cart from './cart/cartRoute.js'
+import auth from './server/authRoute.js'
+import products from './server/productsRoute.js'
+import cart from './server/cartRoute.js'
+import order from './server/orderRoute.js'
 app.use('/', auth)
 app.use('/products', products)
 app.use('/cart', cart)
+app.use('/order', order)
 
 
 app.listen(PORT, () => {

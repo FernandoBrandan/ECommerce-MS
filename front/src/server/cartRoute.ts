@@ -12,7 +12,6 @@ router.get('/', async (req: Request, res: Response) => {
         const userId = user_test // //const userId = req.query.userId  ->>> cambiar cuandoa se agregue auth
         const cart = await axios.get(`http://${apigateway}:80/api/cart/v1/cart/${userId}`)
         const items = Array.isArray(cart.data.response.items) ? cart.data.response.items : []
-        console.log(items)
 
         const totalPrice = await items.reduce((sum: number, item: { price: number; quantity: number }) => {
             const price = item.price ?? 0
@@ -23,6 +22,9 @@ router.get('/', async (req: Request, res: Response) => {
         const shipment = 15000
         const taxes = 10.19
         const totalFinal = totalPrice + shipment + taxes
+
+        // actualizar precio total en tabla cart
+
         res.render('partials/cart/cart', { items: items, totalPrice: totalPrice, quantityItems: quantityItems, shipment: shipment, taxes: taxes, totalFinal: totalFinal })
     } catch (error: Error | any) {
         console.log(error)

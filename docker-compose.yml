@@ -48,6 +48,22 @@ services:
       - postgres
     deploy:
       replicas: 1
+  order-service:
+    build: ./s3-OrderService
+    ports:
+      - 5003:5003
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres_ems
+      POSTGRE_URI: postgres://postgres:postgres@postgres:5432/postgres_ems
+      JWT_SECRET: secret
+    networks:
+      - ecommerce-network
+    depends_on:
+      - postgres
+    deploy:
+      replicas: 1
 
   payment-service:
     build: ./s4-PaymentService
@@ -69,9 +85,9 @@ services:
       - ecommerce-network
     depends_on:
       - user-service
-      # - product-service
+      - product-service
       - cart-service
-      # - order-service
+      - order-service
       - payment-service
 
   ngrok:
