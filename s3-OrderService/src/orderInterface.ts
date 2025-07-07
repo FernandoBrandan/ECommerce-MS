@@ -56,6 +56,7 @@ export interface IOrderDetail {
     detailId?: number
     orderId: string
     itemId: string
+    name: string
     price: number
     quantity: number
     createdAt?: Date

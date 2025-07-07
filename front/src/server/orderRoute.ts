@@ -47,20 +47,26 @@ router.get('/checkout', async (req: Request, res: Response) => {
             "items": [
                 {
                     "itemId": "prod-123",
+                    "name": "teclado",
                     "price": 999.99,
                     "quantity": 1
                 },
                 {
                     "itemId": "prod-456",
+                    "name": "mouse",
                     "price": 499.51,
                     "quantity": 1
                 }
             ]
         }
 
-        const order = await axios.post(`http://${apigateway}:80/api/order/v1/create`,
+        const order = await axios.post(`http://${apigateway}:80/api/orders/v1/create`,
             req
         )
+
+
+        console.log(order.data)
+
         if (order.data.error === false) {
             // Mostrar notificación de éxito
         } else {

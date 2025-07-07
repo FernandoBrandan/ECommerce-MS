@@ -21,8 +21,8 @@ export class Order extends Model<IOrder, OrderCreationAttributes> implements IOr
 Order.init(
     {
         orderId: {
-            type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
+            type: DataTypes.STRING(36),
+            allowNull: false,
             primaryKey: true,
             field: 'order_id',
         },
@@ -82,6 +82,7 @@ export class OrderDetail extends Model<IOrderDetail, OrderDetailCreationAttribut
     public detailId!: number
     public orderId!: string
     public itemId!: string
+    public name!: string
     public price!: number
     public quantity!: number
     public readonly createdAt!: Date
@@ -97,7 +98,7 @@ OrderDetail.init(
             field: 'detail_id',
         },
         orderId: {
-            type: DataTypes.UUID,
+            type: DataTypes.STRING(36),
             allowNull: false,
             field: 'order_id',
         },
@@ -105,6 +106,11 @@ OrderDetail.init(
             type: DataTypes.STRING(36),
             allowNull: false,
             field: 'item_id',
+        },
+        name: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+            field: 'item_name',
         },
         price: {
             type: DataTypes.DECIMAL(10, 2),

@@ -32,7 +32,8 @@
 
 
             <div class="flex flex-wrap gap-4 justify-start">
-                <div class="flex flex-col gap-2 w-full max-w-md bg-white p-4 rounded shadow">
+                <div class="flex flex-row gap-2 w-full bg-white p-4 rounded shadow">
+
                     <h2 class="text-lg font-semibold mb-2">Listado de productos</h2>
                     <% items.forEach(item=> { %>
                         <div class="flex justify-between text-sm border-b pb-1">
@@ -44,15 +45,36 @@
                             </span>
                         </div>
                         <% }) %>
-                            <div>
-                                <div class="mt-4 text-right font-semibold text-gray-700 border-t pt-2">
-                                    Total: $<%= totalAmount.toFixed(2) %>
-                                </div>
-                                <a href="/order/checkout"
-                                    class="mt-4 block w-full text-center bg-primary text-white py-2 rounded hover:bg-secondary">
-                                    Pagar
-                                </a>
+
+                            <div class="mt-4 text-right font-semibold text-gray-700 border-t pt-2">
+                                Total: $<%= totalAmount.toFixed(2) %>
                             </div>
+                            <a href="/order/checkout"
+                                class="mt-4 block w-full text-center bg-primary text-white py-2 rounded hover:bg-secondary">
+                                Pagar
+                            </a>
+                </div>
+                <div class="flex flex-row gap-2 w-full bg-white p-4 rounded shadow">
+
+                    <h2 class="text-lg font-semibold mb-2">Listado de productos</h2>
+                    <% items.forEach(item=> { %>
+                        <div class="flex justify-between text-sm border-b pb-1">
+                            <span>
+                                <%= item.name %>
+                            </span>
+                            <span>
+                                <%= item.quantity %> x $<%= item.price.toFixed(2) %>
+                            </span>
+                        </div>
+                        <% }) %>
+
+                            <div class="mt-4 text-right font-semibold text-gray-700 border-t pt-2">
+                                Total: $<%= totalAmount.toFixed(2) %>
+                            </div>
+                            <a href="/order/checkout"
+                                class="mt-4 block w-full text-center bg-primary text-white py-2 rounded hover:bg-secondary">
+                                Pagar
+                            </a>
                 </div>
             </div>
 

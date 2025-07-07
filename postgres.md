@@ -1,4 +1,4 @@
-1 .sudo docker exec -it postgres psql -U postgres -d postgres_ems
+1 docker exec -it postgres psql -U postgres -d postgres_ems
 
 2. Ver las tablas existentes
    \dt

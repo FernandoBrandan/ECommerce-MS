@@ -4,36 +4,43 @@ const router = Router()
 import { IOrder } from "./orderInterface"
 import { createOrderService, getOrderService } from "./orderService"
 
+// https://mermaid.live/view#pako:eNqFVcFu2kAQ_ZXVSpHaCkfYBpL40AttbklRaC8tFZp4B9jW3nXXdtQQ8TE99pBTP4Ef63jXNmBSygF5Zt6b2Zl5Xj_xWAvkEc8LKPCdhKWB1HsIZorR78ubr8zz3rIPRqCajw2CABexcDbjNsLqCGeQn8BOUAmJip4FsgkstSO07rn1HVLIwyZGx5hvfymhc6w55J87Pzh3lwZCM4-omIGpIOy9etg-65ZO8fkuekgnqKS4wzZGB1EYXO5hGvMANQYVY9KiWpM9Odw-9lazDHYZb_XcHfIYeYeY3uskJ4IbQMNpA8eca0gKqMaeFzr-7uBT-2ihmxemTpRECr0378ajHHp_0VYlh4tkEZsiW6JCA3RSXKBB6r86xM3EZegQbI7uYinNp7wEIzWLdZolSH1krU6O4XWSw_VSElsh1mohTVqt4NXQ84csler1fzK1fTdJDMYrWLerOS5WEWvVWM6PEq3m8wyIWdX2vZCJ7TPkdfEG7Zi1lva4VFLey6ai-z87Yx-pXi5jqRXm1VxjJ7BYbv-of064VRblH-8RWOnGfKqrnfQ6XBosHfJAfi9nsKIjdkeQp_uq9s0WjfrabTV7eVF7dyjJUgWYrlxO0saQ3kvipNvfhSZQXb1zwGupIJHrunmBCVsk5TfdLLNZYFWBrlDn3r39tZv3eIokRino-rU3wowXK0zpiovoUYChF3WmNoSDstDTRxXzqDAl9rjR5XLFIxpJTlaZid3d3UAyUJ-1bs2lqcrUbGoazViXquBRMPItmEdP_CeP_ODy3L8YBaNwMAjCi6tR0OOPPPLC4bnfDy8Hl4MhRYcDf9Pja5vfPw-G4UV41Q_CUdD3w4qBQhba3Lgvi_3AbP4C8X8cNg
+
 router.post("/create", async (req: Request, res: Response) => {
-    console.log(req.body)
-
-    const order = await createOrderService(req.body)
-    console.log(order)
-
-    res.status(200).json(order)
     /** Orden Creada (created/pending_payment)
       *  Trigger: Usuario hace checkout
       *  Acción: Creación de orden en sistema
       *  Próximo estado: Pendiente de Pago
       */
-    // {
-    //     "userId": "usr_12345",
-    //         "email": "cliente@example.com",
-    //             "phoneNumber": "+5491123456789",
-    //                 "items": [
-    //                     {
-    //                         "itemId": "prod_67890",
-    //                         "price": 29.99,
-    //                         "quantity": 2
-    //                     }
-    //                 ]
-    // }
-    // {
-    //     "orderId": "ord_abc123",
-    //         "status": "created",
-    //             "totalAmount": 59.98,
-    //                 "createdAt": "2023-10-05T12:00:00Z"
-    // }
+    console.log("create order", req.body)
+    const createorder = {
+        userId: 'u-001',
+        email: 'cliente@dominio.com',
+        phoneNumber: '+5491122334455',
+        totalAmount: 1499.5,
+        items: [
+            { itemId: 'prod-123', name: "teclado", price: 999.99, quantity: 1 },
+            { itemId: 'prod-456', name: "mouse", price: 499.51, quantity: 1 }
+        ],
+        taxes: [
+            { id: 'IVA', value: 0 },
+            { id: 'total_tax', value: 0 }
+        ],
+        shipment: { mode: 'not_specified', cost: 0 },
+
+    }
+
+    const order = await createOrderService(req.body)
+    console.log("order created", order)
+
+    res.status(200).json(order.res)
+})
+
+// Cancelar orden
+// POST /orders/{orderId}/cancel
+router.post("/cancel", async (req: Request, res: Response) => {
+    //const order = await cancelOrderDB(req.params.orderId, req.body.reason)
+    //res.send(order)
 })
 
 router.get("/get/:userId/:orderId", async (req: Request, res: Response) => {
@@ -55,12 +62,6 @@ router.patch("/update/:orderId/status", async (req: Request, res: Response) => {
     //res.send(order)
 })
 
-// Cancelar orden
-// POST /orders/{orderId}/cancel
-router.post("/cancel", async (req: Request, res: Response) => {
-    //const order = await cancelOrderDB(req.params.orderId, req.body.reason)
-    //res.send(order)
-})
 
 
 

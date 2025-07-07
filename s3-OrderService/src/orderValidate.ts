@@ -3,6 +3,7 @@ import { IOrder, IOrderDetail } from "./orderInterface"
 
 const orderSchema = joi.object<IOrder>({
     userId: joi.string().required(),
+    orderId: joi.string().optional(),
     email: joi.string().email().required(),
     phoneNumber: joi.string().required(),
     totalAmount: joi.number().required(),
@@ -26,6 +27,7 @@ export const validateOrderData = (order: IOrder) => {
 
 const orderDetailSchema = joi.object<IOrderDetail>({
     orderId: joi.string().required(),
+    name: joi.string().required(),
     itemId: joi.string().required(), // array de items ????
     price: joi.number().required(),
     quantity: joi.number().required()

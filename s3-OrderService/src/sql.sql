@@ -12,10 +12,10 @@ CREATE TABLE payments (
         'cancelled',
         'refunded'
     ) NOT NULL DEFAULT 'pending',
-    preference_id VARCHAR(255) NOT NULL,
+    preference_id VARCHAR(255) NOT NULL, 
+    payment_init_point VARCHAR(255) NOT NULL, 
     transaction_amount DECIMAL(10,2) NOT NULL,
     payment_method_id VARCHAR(50) NULL,
-    payment_link VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE

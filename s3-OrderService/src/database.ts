@@ -8,7 +8,7 @@ const connectToDatabase = async () => {
     try {
         await sequelize.authenticate()
         console.log('Conexión a la base de datos establecida')
-        sequelize.sync({ alter: true }).then(() => console.log('Tablas sincronizadas'))
+        sequelize.sync({ alter: true, force: true }).then(() => console.log('Tablas sincronizadas'))
     } catch (error) {
         console.error('Error al conectar a la base de datos:', error)
     }
