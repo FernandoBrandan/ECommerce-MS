@@ -1,0 +1,49 @@
+
+
+       order_id        | user_id |      email      |   phone_number   | total_amount |     status      | cancellation_reason |         created_at         |         updated_at         
+-----------------------+---------+-----------------+------------------+--------------+-----------------+---------------------+----------------------------+----------------------------
+ ORDER-5-1751940030652 | 5       | admin@admin.com | +54 11 1234-5678 |       597.00 | payment_pending |                     | 2025-07-08 02:00:30.654+00 | 2025-07-08 02:00:31.569+00
+(1 row)
+
+
+//          'created',
+//          'payment_pending',
+//          'payment_processing',
+//          'paid',
+//          'payment_failed'
+
+//          'shipped',
+//          'delivered',
+
+//          'cancelled',
+
+
+
+
+
+ id | payment_id | status  |                 preference_id                  |  external_reference   | transaction_amount | payment_method_id |         createdAt          |         updatedAt          |                                               init_point_url                                               
+----+------------+---------+------------------------------------------------+-----------------------+--------------------+-------------------+----------------------------+----------------------------+------------------------------------------------------------------------------------------------------------
+ 86 |            | pending | 173869747-db60cbca-9654-4b51-b5fa-e34283ce98d7 | ORDER-5-1751940030652 |                    |                   | 2025-07-08 02:00:31.536+00 | 2025-07-08 02:00:31.536+00 | https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=173869747-db60cbca-9654-4b51-b5fa-e34283ce98d7
+(1 row)
+
+
+
+
+        'pending',
+        'approved',
+        'in_process',
+
+        'rejected',
+
+        'cancelled',
+
+        'refunded'
+
+
+        ________
+
+        
+
+
+
+ 

@@ -4,71 +4,22 @@ const router = Router()
 
 // const apigateway = "gateway"
 const apigateway = "localhost"
-
 const user_test = "44444"
-
-router.get('/', async (req: Request, res: Response) => {
-    try {
-        //const cart = await axios.get(`http://${apigateway}:80/api/cart/v1/cart/${user_test}`)
-        //const items = Array.isArray(cart.data.response.items) ? cart.data.response.items : []
-        //const totalPrice = await items.reduce((sum: number, item: { price: number; quantity: number }) => {
-        //    const price = item.price ?? 0
-        //    return sum + price * item.quantity
-        //}, 0)
-
-        res.render('partials/order/order', {
-            items: [
-                { name: 'Producto A', quantity: 2, price: 100 },
-                { name: 'Producto A', quantity: 2, price: 100 },
-                { name: 'Producto A', quantity: 2, price: 100 },
-                { name: 'Producto A', quantity: 2, price: 100 },
-                { name: 'Producto B', quantity: 1, price: 250 }
-            ],
-            totalAmount: 450
-        })
-
-        // res.render('partials/order/order', { items: items, totalPrice: totalPrice })
-    } catch (error: Error | any) {
-        console.log(error)
-        const message = error.response?.data || error.message || 'Error desconocido'
-        res.render('partials/main/error', { error: message })
-    }
-})
 
 router.get('/checkout', async (req: Request, res: Response) => {
     console.log("checkout")
-
     try {
-        const req = {
-            "userId": "u-001",
-            "email": "cliente@dominio.com",
-            "phoneNumber": "+5491122334455",
-            "totalAmount": 1499.50,
-            "items": [
-                {
-                    "itemId": "prod-123",
-                    "name": "teclado",
-                    "price": 999.99,
-                    "quantity": 1
-                },
-                {
-                    "itemId": "prod-456",
-                    "name": "mouse",
-                    "price": 499.51,
-                    "quantity": 1
-                }
-            ]
+        const data = {
+            user: req.session.user || null,
+            cart: req.session.cart || null
         }
 
-        const order = await axios.post(`http://${apigateway}:80/api/orders/v1/create`,
-            req
-        )
-
-
+        const order = await axios.post(`http://${apigateway}:80/api/orders/v1/create`, data)
         console.log(order.data)
-
         if (order.data.error === false) {
-            // Mostrar notificación de éxito
+            const url_payment = order.data.preferenceInit_point
+            console.log("URL de pago:", url_payment)
+            res.redirect(url_payment)
         } else {
             // Mostrar notificación de error
         }

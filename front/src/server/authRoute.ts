@@ -2,7 +2,8 @@ import { Router, Request, Response } from "express"
 import axios from "axios"
 const router = Router()
 
-const apigateway = "gateway"
+const apigateway = "localhost"
+
 
 
 router.get('/register', (req: Request, res: Response) => {
@@ -12,11 +13,13 @@ router.get('/register', (req: Request, res: Response) => {
 router.post('/register', async (req: Request, res: Response) => {
     try {
         const response = await axios.post(`http://${apigateway}:80/api/users/v1/register`, {
-            name: req.body.name,
+            name: req.body.firstName + ", " + req.body.lastName,
             email: req.body.email,
+            phoneNumber: req.body.phone, // +56 11 12345678
             password: req.body.password,
         })
-        res.render('index', { Response: JSON.stringify(response.data) })
+        console.log(response.data)
+        res.render('partials/user/login')
     } catch (error: any) {
         const message = error.response?.data || error.message || 'Error desconocido'
         res.render('index', { Response: message })
@@ -34,11 +37,27 @@ router.post('/login', async (req: Request, res: Response) => {
             email: req.body.email,
             password: req.body.password,
         })
-        res.render('index', { Response: JSON.stringify(response.data) })
+        console.log(response.data)
+        req.session.user = {
+            id: response.data.user.id,
+            name: response.data.user.name,
+            email: response.data.user.email,
+            phoneNumber: response.data.user.phoneNumber,
+            token: response.data.token,
+        }
+
+        res.render('index', { Response: req.session.user || null })
     } catch (error: any) {
         const message = error.response?.data || error.message || 'Error desconocido'
         res.render('index', { Response: message })
     }
+})
+
+
+router.get('/logout', (req: Request, res: Response) => {
+    req.session.destroy(() => {
+        res.redirect('/')
+    })
 })
 
 export default router

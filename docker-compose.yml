@@ -15,6 +15,7 @@ services:
       - postgres
     deploy:
       replicas: 1
+
   product-service:
     build: ./s2-ProductService
     ports:

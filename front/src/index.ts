@@ -1,4 +1,4 @@
-import express, { response } from 'express'
+import express, { Request, Response } from 'express'
 import path from 'path'
 const app = express()
 const PORT = process.env.PORT || 3000
@@ -8,9 +8,48 @@ app.use(express.static(path.join(process.cwd(), 'dist/public')))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
+import session from 'express-session'
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }
+}))
+
+// Definir tipo extendido para sesión
+declare module 'express-session' {
+    interface SessionData {
+        user?: {
+            id: number,
+            name: string,
+            email: string,
+            phoneNumber: string,
+            token: string
+        }
+        cart?: {
+            items: Array<{
+                productId: number
+                quantity: number
+            }>
+            totalPrice?: number
+            quantityItems?: number
+            shipment?: number
+            taxes?: number
+            totalFinal?: number
+        }
+    }
+}
+
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null
+    next()
+})
+
 // Ruta principal
-app.get('/', (_req, res) => {
-    res.render('index', { Response: "" })
+app.get('/', (req: Request, res: Response) => {
+    console.log("Usuario:", req.session.user)
+    res.render('index', { Response: req.session.user || null })
 })
 
 import auth from './server/authRoute.js'

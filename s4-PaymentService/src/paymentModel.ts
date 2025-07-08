@@ -10,6 +10,7 @@ export class Payment extends Model<IPayment, PaymentCreationAttributes> implemen
     public status!: string
     public preference_id!: string
     public external_reference!: string
+    public init_point_url!: string
     public transaction_amount!: number
     public payment_method_id!: string
 
@@ -43,6 +44,10 @@ Payment.init(
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
+        },
+        init_point_url: {
+            type: DataTypes.STRING,
+            allowNull: true,
         },
         transaction_amount: {
             type: DataTypes.FLOAT,

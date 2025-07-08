@@ -8,6 +8,7 @@ export class User extends Model<IUser, UserCreationAttributes> implements IUser 
     public id!: number
     public name!: string
     public email!: string
+    public phoneNumber!: string
     public password!: string
 
     // timestamps
@@ -30,6 +31,10 @@ User.init(
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
+        },
+        phoneNumber: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         password: {
             type: DataTypes.STRING,

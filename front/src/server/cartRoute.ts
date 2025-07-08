@@ -9,6 +9,11 @@ const user_test = "44444"
 
 router.get('/', async (req: Request, res: Response) => {
     try {
+        if (!req.session.user) {
+
+            return res.redirect('/login')
+        }
+
         const userId = user_test // //const userId = req.query.userId  ->>> cambiar cuandoa se agregue auth
         const cart = await axios.get(`http://${apigateway}:80/api/cart/v1/cart/${userId}`)
         const items = Array.isArray(cart.data.response.items) ? cart.data.response.items : []
@@ -23,7 +28,16 @@ router.get('/', async (req: Request, res: Response) => {
         const taxes = 10.19
         const totalFinal = totalPrice + shipment + taxes
 
-        // actualizar precio total en tabla cart
+        // actualizar precio total en tabla cart --> endpoint addToCart
+
+        req.session.cart = {
+            items: items,
+            totalPrice: totalPrice,
+            quantityItems: quantityItems,
+            shipment: shipment,
+            taxes: taxes,
+            totalFinal: totalFinal,
+        }
 
         res.render('partials/cart/cart', { items: items, totalPrice: totalPrice, quantityItems: quantityItems, shipment: shipment, taxes: taxes, totalFinal: totalFinal })
     } catch (error: Error | any) {

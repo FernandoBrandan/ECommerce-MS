@@ -8,27 +8,18 @@ const baseURL = 'https://api.mercadopago.com'
 
 // Crear preferencia y obtener payment_id del redirect
 export const createPreference = async (orderData: any) => {
-    console.log(">>>> dos arrays ?? >>>", orderData)
+
+    const client = new MercadoPago({ accessToken: accessToken })
+    const preference = new Preference(client)
+    const urls = await createUrls()
 
 
-    const orderDetails = [
-        {
-            orderId: 'ORDER-u-001-1751835662241',
-            itemId: 'prod-123',
-            price: 999.99,
-            quantity: 1
-        },
-        {
-            orderId: 'ORDER-u-001-1751835662241',
-            itemId: 'prod-456',
-            price: 499.51,
-            quantity: 1
-        }
-    ]
+    const now = new Date();
+    const expirationDateFrom = now.toISOString();
+    const expirationDateTo = new Date(now.getTime() + 15 * 60000).toISOString(); // +15 minutos
 
-    const orderId = orderData.orderDetails.orderId || 'ORDER-u-001-1751835662241'
 
-    const i = orderDetails.map((item: any) => {
+    const i = orderData.orderDetails.map((item: any) => {
         return {
             id: item.itemId,
             title: item.name,
@@ -38,9 +29,6 @@ export const createPreference = async (orderData: any) => {
         }
     })
 
-    const client = new MercadoPago({ accessToken: accessToken })
-    const preference = new Preference(client)
-    const urls = await createUrls()
     const body = {
         items: [...i],
         payer: {
@@ -58,9 +46,9 @@ export const createPreference = async (orderData: any) => {
             { id: 'total_tax', value: 0 }
         ],
         external_reference: orderData.orderCreated.orderId,
-        expires: false,
-        // expiration_date_from: "2022-11-17T09:37:52.000-04:00",
-        // expiration_date_to: "2022-11-17T10:37:52.000-05:00",
+        expires: true, 
+        expiration_date_from: expirationDateFrom,
+        expiration_date_to: expirationDateTo,
         back_urls: {
             success: urls.successUrl,
             failure: urls.failureUrl,
@@ -70,16 +58,20 @@ export const createPreference = async (orderData: any) => {
         auto_return: 'approved'
     }
 
-    console.log("body", body)
     const preference_created = await preference.create({ body })
+    if (!preference_created) return { error: true, message: "Error creating preference", res: [] }
+    if (!preference_created.id) return { error: true, message: "Preference ID not found", res: [] }
+    if (!preference_created.external_reference) return { error: true, message: "External reference not found", res: [] }
+    if (!preference_created.init_point) return { error: true, message: "Init point not found", res: [] }
 
-    if (preference_created.id && preference_created.external_reference) {
-        await createPreferenceDB(preference_created.id, preference_created.external_reference)
+    const preference_createdDB = await createPreferenceDB(preference_created.id, preference_created.external_reference, preference_created.init_point)
+    if (!preference_createdDB) return { error: true, message: "Error creating preference in DB", res: [] }
+
+    return {
+        error: false,
+        message: "Preference created successfully",
+        preference_created
     }
-
-    console.log("Preference created:", preference_created)
-
-    return preference_created
 }
 
 

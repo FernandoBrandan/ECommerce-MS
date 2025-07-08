@@ -1,14 +1,15 @@
 import { IPayment } from "paymentInterface"
 import { Payment } from "./paymentModel"
 
-export const createPreferenceDB = async (preference_id: string, external_reference: string) => {
+export const createPreferenceDB = async (preference_id: string, external_reference: string, init_point_url: string) => {
     const newPayment: IPayment = {
-        payment_id: "",
+        payment_id: undefined, // This will be set later when the payment is created
         status: "pending",
         preference_id: preference_id,
         external_reference: external_reference,
+        init_point_url: init_point_url,
     }
-    const res = await Payment.create(newPayment)
+    return await Payment.create(newPayment)
 }
 
 export const updatePaymentStatusDB = async (external_reference: string, payment_id: string, status: string) => {

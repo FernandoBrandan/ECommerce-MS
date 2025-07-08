@@ -280,12 +280,15 @@
                             </div>
 
                             <div class="space-y-3">
-                                <button id="checkout-btn"
-                                    class="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 transition font-medium <%= quantityItems === 0 ? 'disabled:bg-gray-600 disabled:cursor-not-allowed' : '' %>"
-                                    <%=quantityItems===0 ? 'disabled' : '' %>>
+                                <a id="checkout-btn" href="/order/checkout"
+                                    class="block w-full text-center py-3 px-4 rounded-md font-medium transition
+           <%= quantityItems === 0 ? 'bg-gray-600 cursor-not-allowed pointer-events-none text-gray-200' : 'bg-green-600 hover:bg-green-700 text-white' %>"
+                                    aria-disabled="<%= quantityItems === 0 ? 'true' : 'false' %>"
+                                    tabindex="<%= quantityItems === 0 ? '-1' : '0' %>">
                                     Proceder al pago
-                                </button>
+                                </a>
                             </div>
+
 
                             <!-- Cupón de descuento -->
                             <div class="mt-6 pt-6 border-t border-slate-600">
