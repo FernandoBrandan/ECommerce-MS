@@ -15,10 +15,10 @@ const getNgrokUrl = async (): Promise<string | null> => {
 const createUrls = async () => {
     const ngrokUrl = await getNgrokUrl()
     if (!ngrokUrl) throw new Error('Ngrok URL not found')
-    const notificationUrl: string = `${ngrokUrl}/api/payment/webhook`
-    const successUrl: string = `${ngrokUrl}/api/payment/success`
-    const failureUrl: string = `${ngrokUrl}/api/payment/failure`
-    const pendingUrl: string = `${ngrokUrl}/api/payment/pending`
+    const notificationUrl: string = `${ngrokUrl}/api/payments/v1/webhook`
+    const successUrl: string = `${ngrokUrl}/api/payments/v1/success`
+    const failureUrl: string = `${ngrokUrl}/api/payments/v1/failure`
+    const pendingUrl: string = `${ngrokUrl}/api/payments/v1/pending`
     return { notificationUrl, successUrl, failureUrl, pendingUrl }
 }
 

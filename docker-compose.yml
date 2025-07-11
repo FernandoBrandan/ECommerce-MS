@@ -84,6 +84,8 @@ services:
       - postgres
     deploy:
       replicas: 1
+  #    profiles:
+  #      - disabled
 
   gateway:
     build: ./s0-Gateway

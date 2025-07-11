@@ -42,7 +42,7 @@ export const createOrderService = async (data: any) => {
     if (preference.data.error === true) return { error: true, message: `Error generating preference: ${preference.data.message}`, res: [] }
 
     // Update order status to payment_pending
-    const updated_order = await updateOrderStatusDB(orderCreated.userId, orderCreated.orderId, "payment_pending")
+    const updated_order = await updateOrderStatusDB(orderCreated.orderId, "payment_pending")
     if (!updated_order) return { error: true, message: "Error updating order status", res: [] }
 
 

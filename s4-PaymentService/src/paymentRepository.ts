@@ -12,15 +12,18 @@ export const createPreferenceDB = async (preference_id: string, external_referen
     return await Payment.create(newPayment)
 }
 
+
 export const updatePaymentStatusDB = async (external_reference: string, payment_id: string, status: string) => {
     const order = await Payment.findOne({ where: { external_reference: external_reference } })
-    if (!order) throw new Error('Order not found')
+    if (order && order.status !== status) {
+        return await Payment.update(
+            { status: status, payment_id: payment_id },
+            { where: { external_reference: external_reference } }
+        )
+    }
 
-    if (order.status === status) return
-
-    const updated = await order.update({ status })
-    if (!updated) throw new Error('Order not updated')
-
+    const msg = `Payment status is already updated or not founded - Check the order id: ${external_reference} - Check the payment id: ${payment_id}`
+    return { error: true, message: msg }
 }
 
 export const getPaymentByExternalRef = async (external_reference: string) => {
@@ -28,3 +31,7 @@ export const getPaymentByExternalRef = async (external_reference: string) => {
     if (!payment) throw new Error('Payment not found')
     return payment
 }
+
+/**
+ * 
+ */

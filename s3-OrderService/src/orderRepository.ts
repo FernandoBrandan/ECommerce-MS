@@ -61,8 +61,8 @@ export const updateOrderDB = async (userId: string, orderId: string, order: IOrd
     return await Order.update(order, { where: { userId, orderId } })
 }
 
-export const updateOrderStatusDB = async (userId: string, orderId: string, status: string) => {
-    return await Order.update({ status }, { where: { userId, orderId } })
+export const updateOrderStatusDB = async (orderId: string, status: string) => {
+    return await Order.update({ status }, { where: { orderId } })
 }
 
 export const deleteOrderDB = async (userId: string, orderId: string) => {
