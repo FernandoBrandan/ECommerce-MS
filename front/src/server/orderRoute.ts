@@ -9,11 +9,7 @@ const user_test = "44444"
 router.get('/checkout', async (req: Request, res: Response) => {
     console.log("checkout")
     try {
-        const data = {
-            user: req.session.user || null,
-            cart: req.session.cart || null
-        }
-
+        const data = { user: req.session.user || null, cart: req.session.cart || null }
         const order = await axios.post(`http://${apigateway}:80/api/orders/v1/create`, data)
         console.log(order.data)
         if (order.data.error === false) {
@@ -28,6 +24,15 @@ router.get('/checkout', async (req: Request, res: Response) => {
         // Mostrar notificación de error
     }
 })
+
+router.get('/', async (req: Request, res: Response) => {
+    res.render('partials/order/order')
+})
+
+router.get('/list', async (req: Request, res: Response) => {
+    res.render('partials/order/list')
+})
+
 
 
 

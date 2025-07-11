@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Órdenes - Sistema de Seguimiento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4361ee',
+                        success: '#06d6a0',
+                        warning: '#ffd166',
+                        danger: '#ef476f',
+                        dark: '#1e1e2c',
+                        light: '#f8f9fa',
+                        gray: '#6c757d',
+                        border: '#dee2e6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fb;
+        }
+
+        .order-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #4361ee;
+        }
+
+        .status-badge {
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .pagination-btn:hover {
+            background-color: #4361ee;
+            color: white;
+        }
+
+        .filter-btn.active {
+            background-color: #4361ee;
+            color: white;
+            border-color: #4361ee;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-6xl">
+        <!-- Header -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-primary">Mis Pedidos</h1>
+                    <p class="text-gray-600 mt-2">Revisa el estado de tus pedidos recientes</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar pedidos..." 
+                               class="w-full md:w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+            <div class="flex flex-wrap gap-2">
+                <button class="filter-btn active px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium transition">
+                    Todos
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium transition">
+                    Pendientes
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium transition">
+                    En proceso
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium transition">
+                    Enviados
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium transition">
+                    Entregados
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium transition">
+                    Cancelados
+                </button>
+            </div>
+        </div>
+
+        <!-- Order List -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <!-- Table Header (for larger screens) -->
+            <div class="hidden md:grid grid-cols-12 gap-4 bg-slate-100 px-6 py-3 text-sm font-semibold text-gray-600">
+                <div class="col-span-2">ID Pedido</div>
+                <div class="col-span-2">Fecha</div>
+                <div class="col-span-2">Total</div>
+                <div class="col-span-2">Estado</div>
+                <div class="col-span-2">Método de Pago</div>
+                <div class="col-span-2 text-right">Acciones</div>
+            </div>
+
+            <!-- Order Items -->
+            <div id="order-list" class="divide-y divide-gray-200">
+                <!-- Order 1 -->
+                <div class="order-card bg-white p-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">ID Pedido</div>
+                        <div class="font-medium">#ORD-20230712-001</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Fecha</div>
+                        <div>12 Jul 2023</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Total</div>
+                        <div class="font-semibold">$189.90</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Estado</div>
+                        <span class="status-badge px-3 py-1 rounded-full font-semibold bg-success/20 text-success">Entregado</span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Pago</div>
+                        <div class="flex items-center">
+                            <i class="fab fa-cc-visa text-xl text-blue-800 mr-2"></i>
+                            <span>Visa **** 1234</span>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end">
+                        <button class="view-detail-btn px-4 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition text-sm">
+                            Ver Detalle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Order 2 -->
+                <div class="order-card bg-white p-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">ID Pedido</div>
+                        <div class="font-medium">#ORD-20230710-045</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Fecha</div>
+                        <div>10 Jul 2023</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Total</div>
+                        <div class="font-semibold">$89.50</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Estado</div>
+                        <span class="status-badge px-3 py-1 rounded-full font-semibold bg-primary/20 text-primary">En camino</span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Pago</div>
+                        <div class="flex items-center">
+                            <i class="fab fa-paypal text-xl text-blue-500 mr-2"></i>
+                            <span>PayPal</span>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end">
+                        <button class="view-detail-btn px-4 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition text-sm">
+                            Ver Detalle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Order 3 -->
+                <div class="order-card bg-white p-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">ID Pedido</div>
+                        <div class="font-medium">#ORD-20230708-112</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Fecha</div>
+                        <div>08 Jul 2023</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Total</div>
+                        <div class="font-semibold">$245.75</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Estado</div>
+                        <span class="status-badge px-3 py-1 rounded-full font-semibold bg-warning/20 text-warning">En proceso</span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Pago</div>
+                        <div class="flex items-center">
+                            <i class="fab fa-cc-mastercard text-xl text-red-600 mr-2"></i>
+                            <span>Mastercard **** 5678</span>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end">
+                        <button class="view-detail-btn px-4 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition text-sm">
+                            Ver Detalle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Order 4 -->
+                <div class="order-card bg-white p-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">ID Pedido</div>
+                        <div class="font-medium">#ORD-20230705-078</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Fecha</div>
+                        <div>05 Jul 2023</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Total</div>
+                        <div class="font-semibold">$120.00</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Estado</div>
+                        <span class="status-badge px-3 py-1 rounded-full font-semibold bg-danger/20 text-danger">Cancelado</span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Pago</div>
+                        <div class="flex items-center">
+                            <i class="fas fa-money-bill-wave text-xl text-green-600 mr-2"></i>
+                            <span>Efectivo</span>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end">
+                        <button class="view-detail-btn px-4 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition text-sm">
+                            Ver Detalle
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Order 5 -->
+                <div class="order-card bg-white p-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">ID Pedido</div>
+                        <div class="font-medium">#ORD-20230701-023</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Fecha</div>
+                        <div>01 Jul 2023</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Total</div>
+                        <div class="font-semibold">$76.25</div>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Estado</div>
+                        <span class="status-badge px-3 py-1 rounded-full font-semibold bg-success/20 text-success">Entregado</span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="text-gray-500 md:hidden text-sm">Pago</div>
+                        <div class="flex items-center">
+                            <i class="fab fa-cc-apple-pay text-xl text-black mr-2"></i>
+                            <span>Apple Pay</span>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 flex justify-end">
+                        <button class="view-detail-btn px-4 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition text-sm">
+                            Ver Detalle
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="bg-white px-6 py-4 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0 text-sm text-gray-600">
+                    Mostrando 1-5 de 12 pedidos
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button class="pagination-btn w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="pagination-btn w-10 h-10 rounded-lg border border-gray-300 bg-primary text-white font-medium">1</button>
+                    <button class="pagination-btn w-10 h-10 rounded-lg border border-gray-300">2</button>
+                    <button class="pagination-btn w-10 h-10 rounded-lg border border-gray-300">3</button>
+                    <button class="pagination-btn w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden bg-white rounded-xl shadow-md p-12 text-center">
+            <div class="mx-auto w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mb-6">
+                <i class="fas fa-box-open text-primary text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-800 mb-2">No tienes pedidos recientes</h3>
+            <p class="text-gray-600 max-w-md mx-auto mb-6">Parece que aún no has realizado ningún pedido. Cuando lo hagas, podrás verlos y hacerles seguimiento aquí.</p>
+            <button class="px-6 py-3 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition">
+                <i class="fas fa-shopping-cart mr-2"></i>Ir a la tienda
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de funcionalidad
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filtros
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Simular filtrado
+                    if(this.textContent.includes('Cancelados')) {
+                        document.getElementById('order-list').innerHTML = `
+                            <div class="order-card bg-white p-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500 md:hidden text-sm">ID Pedido</div>
+                                    <div class="font-medium">#ORD-20230705-078</div>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500 md:hidden text-sm">Fecha</div>
+                                    <div>05 Jul 2023</div>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500 md:hidden text-sm">Total</div>
+                                    <div class="font-semibold">$120.00</div>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500 md:hidden text-sm">Estado</div>
+                                    <span class="status-badge px-3 py-1 rounded-full font-semibold bg-danger/20 text-danger">Cancelado</span>
+                                </div>
+                                <div class="md:col-span-2">
+                                    <div class="text-gray-500 md:hidden text-sm">Pago</div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-money-bill-wave text-xl text-green-600 mr-2"></i>
+                                        <span>Efectivo</span>
+                                    </div>
+                                </div>
+                                <div class="md:col-span-2 flex justify-end">
+                                    <button class="view-detail-btn px-4 py-2 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition text-sm">
+                                        Ver Detalle
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    } else if(this.textContent.includes('Todos')) {
+                        // Restaurar todos los pedidos
+                        document.getElementById('order-list').innerHTML = `
+                            <!-- Pedidos originales aquí -->
+                        `;
+                    }
+                });
+            });
+            
+            // Botones de ver detalle
+            const detailBtns = document.querySelectorAll('.view-detail-btn');
+            detailBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    alert('Redirigiendo a la página de detalle del pedido...');
+                    // En un sistema real, redirigiría a la página de detalle
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,64 +1,267 @@
-<!-- views/cart.ejs -->
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito de Compras</title>
+    <title>Sistema de Seguimiento de Pedidos</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#3B82F6',
-                        secondary: '#10B981'
+                        primary: '#4361ee',
+                        success: '#06d6a0',
+                        warning: '#ffd166',
+                        danger: '#ef476f',
+                        dark: '#1e1e2c',
+                        light: '#f8f9fa',
+                        gray: '#6c757d',
+                        border: '#dee2e6',
                     }
                 }
             }
         }
     </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fb;
+        }
+
+        .step-active {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge {
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-message {
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .success-message {
+            background-color: #d1fae5;
+            border: 1px solid #a7f3d0;
+            color: #059669;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+    </style>
 </head>
 
-<body class="bg-slate-800 min-h-screen">
-    <%- include('../main/nav') %>
-
-
-        <main class="w-[90vw] max-w-7xl mx-auto px-4 py-4 space-y-4">
-            <div class="text-gray-400 text-sm mb-6">
-                Visualización del flujo de estados de una orden, con datos enviados y recibidos en cada paso.
+<body class="bg-slate-700 min-h-screen py-8">
+    <div class="container mx-auto px-4 max-w-4xl">
+        <!-- Loading Overlay -->
+        <div id="loading-overlay"
+            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-slate-200 p-6 rounded-lg shadow-lg">
+                <div class="flex items-center">
+                    <i class="fas fa-spinner spinner mr-3 text-primary"></i>
+                    <span>Cargando datos...</span>
+                </div>
             </div>
+        </div>
 
+        <!-- Error/Success Messages -->
+        <div id="message-container"></div>
 
-            <div class="flex flex-wrap gap-4 justify-start">
-                <div class="flex flex-row gap-2 w-full bg-white p-4 rounded shadow">
+        <!-- Header -->
+        <div class="bg-slate-200 rounded-xl shadow-md p-6 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-primary">Seguimiento de Pedido</h1>
+                    <div class="mt-2 flex flex-wrap items-center gap-4">
+                        <div class="flex items-center">
+                            <span class="text-gray-500">ID:</span>
+                            <span id="order-id" class="ml-2 font-semibold">-</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-gray-500">Fecha:</span>
+                            <span id="order-date" class="ml-2 font-semibold">-</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <div class="flex items-center">
+                        <span class="text-gray-500 mr-2">Estado:</span>
+                        <span id="global-status"
+                            class="px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-primary">Cargando...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                    1 - Order - Created
+        <!-- Progress Tracker -->
+        <div class="bg-slate-200 rounded-xl shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">Progreso del Pedido</h2>
 
-                    2 - Payment - pending
-                        Order - payment_pending
-
-                    3 - Payment - in_process
-                        Order - payment_processing
-
-                    4 - Payment - approved
-                        Order - paid
-
-                    if - Payment - rejected
-                        Order - payment_failed
-
-                    5 - Order - shipped
-
-                    6 - Order - delivered
-
-
+            <div class="relative">
+                <!-- Progress Line -->
+                <div class="absolute left-8 top-4 h-1 bg-gray-200 w-[calc(100%-4rem)] z-0">
+                    <div id="progress-bar" class="h-full bg-success transition-all duration-500 ease-in-out"
+                        style="width: 0%"></div>
                 </div>
 
+                <div class="flex justify-between relative z-10">
+                    <!-- Step 1: Created -->
+                    <div class="text-center w-1/5">
+                        <div id="step1"
+                            class="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2">
+                            <i class="fas fa-file-invoice text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="text-sm font-medium text-gray-500">Creado</div>
+                        <div id="step1-time" class="text-xs text-gray-400 mt-1">-</div>
+                        <div id="step2-status" class="text-xs text-gray-400 hover:text-blue-500 mt-1">Details</div>
+                    </div>
 
+                    <!-- Step 2: Payment -->
+                    <div class="text-center w-1/5">
+                        <div id="step2"
+                            class="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2">
+                            <i class="fas fa-credit-card text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="text-sm font-medium text-gray-500">Pago</div>
+                        <div id="step2-time" class="text-xs text-gray-400 mt-1">-</div>
+                        <div id="step2-status" class="text-xs text-gray-400 hover:text-blue-500 mt-1">Details</div>
+                    </div>
+
+                    <!-- Step 3: Processing -->
+                    <!-- <div class="text-center w-1/5">
+                        <div id="step3"
+                            class="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2">
+                            <i class="fas fa-cog text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="text-sm font-medium text-gray-500">Procesando</div>
+                        <div id="step3-time" class="text-xs text-gray-400 mt-1">-</div>
+                    </div> -->
+
+                    <!-- Step 4: Shipped -->
+                    <div class="text-center w-1/5">
+                        <div id="step4"
+                            class="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2">
+                            <i class="fas fa-shipping-fast text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="text-sm font-medium text-gray-500">Enviado</div>
+                        <div id="step4-time" class="text-xs text-gray-400 mt-1">-</div>
+                        <div id="step2-status" class="text-xs text-gray-400 hover:text-blue-500 mt-1">Details</div>
+                    </div>
+
+                    <!-- Step 5: Delivered -->
+                    <div class="text-center w-1/5">
+                        <div id="step5"
+                            class="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-2">
+                            <i class="fas fa-check-circle text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="text-sm font-medium text-gray-500">Entregado</div>
+                        <div id="step5-time" class="text-xs text-gray-400 mt-1">-</div>
+                        <div id="step2-status" class="text-xs text-gray-400 hover:text-blue-500 mt-1">Details</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Details -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Order Items -->
+            <div class="lg:col-span-2">
+                <div class="bg-slate-200 rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Productos</h2>
+                    <div id="order-items" class="space-y-4">
+                        <!-- Products will be loaded here -->
+                    </div>
+                    <div id="order-summary" class="mt-6 pt-4 border-t">
+                        <!-- Order summary will be loaded here -->
+                    </div>
+                </div>
             </div>
 
-        </main>
+            <!-- Order Information -->
+            <div class="space-y-8">
+                <!-- Payment Information -->
+                <div class="bg-slate-200 rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Información de Pago</h2>
+                    <div id="payment-info" class="space-y-3">
+                        <!-- Payment info will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Shipping Information -->
+                <div class="bg-slate-200 rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Información de Envío</h2>
+                    <div id="shipping-info" class="space-y-3">
+                        <!-- Shipping info will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Status Information -->
+                <div id="status-info" class="bg-slate-200 rounded-xl shadow-md p-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Estado Actual</h2>
+                    <div class="flex items-start">
+                        <div class="mr-3 mt-1">
+                            <i class="fas fa-info-circle text-primary text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium text-gray-800">Sin datos</p>
+                            <p class="text-gray-600 mt-1">Busca un pedido para ver su estado actual.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-8 flex flex-wrap gap-4">
+            <button id="print-btn"
+                class="px-6 py-3 bg-primary hover:bg-blue-700 text-white rounded-lg font-medium transition" disabled>
+                <i class="fas fa-print mr-2"></i>Imprimir Recibo
+            </button>
+            <button id="support-btn"
+                class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-medium transition">
+                <i class="fas fa-envelope mr-2"></i>Contactar Soporte
+            </button>
+            <button
+                class="px-6 py-3 bg-slate-200 border border-gray-300 hover:bg-gray-50 text-gray-800 rounded-lg font-medium transition ml-auto">
+                <i class="fas fa-arrow-left mr-2"></i>Volver a Mis Pedidos
+            </button>
+        </div>
+    </div>
 </body>
 
 </html>

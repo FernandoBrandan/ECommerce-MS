@@ -6,7 +6,8 @@ import createUrls from './ngrokService'
 import { createPreferenceDB, updatePaymentStatusDB } from './paymentRepository'
 const accessToken = "TEST-932074593473716-103114-a21810c7fdc6f4a0b243b42e0054ef35-173869747"
 const baseURL = 'https://api.mercadopago.com'
-const apigateway = 'http://order-service:5004/v1'
+const apiOrder = 'http://order-service:5004/v1'
+const apiProduct = 'http://product-service:5002/v1'
 
 // Crear preferencia y obtener payment_id del redirect
 export const createPreference = async (orderData: any) => {
@@ -172,7 +173,8 @@ export const processWebhook = async (dataRequest: any) => {
                 // Payment status APRO (Approved) - Pago Aprobado
                 console.log('Payment approved:', payment.status, payment.external_reference)
                 const updatedPayment = await updatePaymentStatusDB(payment.external_reference, payment_id, payment.status)
-                const updatedOrder = await axios.patch(`${apigateway}/orders/${payment.external_reference}`, { status: 'paid' })
+                const updatedOrder = await axios.patch(`${apiOrder}/orders/${payment.external_reference}`, { status: 'paid' })
+                // const updateStock = await axios.patch(`${apiProduct}/updateStock/${}`, { items })
 
                 // Iniciar proceso de fulfillment
                 // dev triggerShippingProcess(order_id)
@@ -185,7 +187,7 @@ export const processWebhook = async (dataRequest: any) => {
                 // Payment status CONT (Pending) - Pendiente de Pago
                 console.log('Payment pending:', payment.status, payment.external_reference)
                 const updatedPending = await updatePaymentStatusDB(payment.external_reference, payment_id, payment.status)
-                const updatedOrderPending = await axios.patch(`${apigateway}/orders/${payment.external_reference}`, { status: 'payment_pending' })
+                const updatedOrderPending = await axios.patch(`${apiOrder}/orders/${payment.external_reference}`, { status: 'payment_pending' })
 
                 // Opcional: notificar al usuario sobre el estado
                 // dev sendPendingNotification(user_email)
@@ -194,7 +196,7 @@ export const processWebhook = async (dataRequest: any) => {
                 // Payment status rejected - Rechazos Específicos (OTHE, CALL, FUND, SECU, EXPI, FORM)
                 console.log('Payment pending:', payment.status, payment.external_reference)
                 const updatedRejected = await updatePaymentStatusDB(payment.external_reference, payment_id, payment.status)
-                const updatedOrderRejected = await axios.patch(`${apigateway}/orders/${payment.external_reference}`, { status: 'payment_failed' })
+                const updatedOrderRejected = await axios.patch(`${apiOrder}/orders/${payment.external_reference}`, { status: 'payment_failed' })
 
                 // Opcional: notificar al usuario sobre el estado
                 // dev sendRejectedNotification(user_email)
